@@ -15,6 +15,8 @@ bot_intents = discord.Intents.default()
 bot_intents.typing = True
 bot_intents.messages = True
 bot_intents.message_content = True
+bot_intents.dm_messages = True
+bot_intents.dm_typing = True
 
 client = discord.Client(intents = bot_intents)
 
@@ -26,7 +28,13 @@ async def on_ready():
 # on_member_join is called when a member joins the server
 @client.event
 async def on_member_join(member):
-    return
+    if member == client.user:
+        return
+    
+    await member.create_dm()
+    await member.dm_channel.send(
+        f"Greetings, {member.name} and welcome to Harrier Dynamics, the Caldari State's number one defense contractor! To get set up and authed in our Discord server, go to [seat.h-dyn.net](https://seat.h-dyn.net) and log in with your character, then click Discord on the left and \"Join Server\". We hope you enjoy your stay here."
+    )
 
 # on_message() is called whenever a message is sent in a chanmnel that the bot has access to
 @client.event

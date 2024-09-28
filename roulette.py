@@ -10,7 +10,7 @@ wildcards = [
 ]
 
 tank_types = [
-    "shield buffer ", "active shield ", "passive shield ", "active armor ", "armor buffer ", "hull "
+    "shield buffer ", "active shield ", "passive shield ", "active armor ", "armor buffer ", "hull tanked "
 ]
 
 roles = [
