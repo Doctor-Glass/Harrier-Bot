@@ -6,11 +6,17 @@ from dotenv import load_dotenv
 # Command includes
 import roulette      # roulette.py, implements the !roulette command
 
-
 load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
+TOKEN = os.getenv("DISCORD_TOKEN")
 
-client = discord.Client()
+# Set intents
+bot_intents = discord.Intents.default()
+
+bot_intents.typing = True
+bot_intents.messages = True
+bot_intents.message_content = True
+
+client = discord.Client(intents = bot_intents)
 
 # on_ready() is called when the bot is set up and ready to go
 @client.event
@@ -25,9 +31,23 @@ async def on_member_join(member):
 # on_message() is called whenever a message is sent in a chanmnel that the bot has access to
 @client.event
 async def on_message(message):
-    if message.content == "!roulette":
-        response = roulette.spin()
+    if message.author == client.user:
+        return
 
-        await message.channel.send(response)
+    match message.content:
+        # !test
+        case "!test":
+            response = "**We remain Caldari, *no matter the cost***"
+
+            await message.channel.send(response)
+        # !roulette
+        case "!roulette":
+            response = roulette.spin()
+
+            await message.channel.send(response)
+        # default
+        case _:
+            return
+
 
 client.run(TOKEN)

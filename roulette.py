@@ -36,10 +36,11 @@ def spin():
             wildcard_options.remove(wildcard_choice)
     
     output_string += random.choice(tank_types)# + "tank "
-
     output_string += random.choice(roles)
-
     output_string += random.choice(hulls)
+
+    # Capitalize the first letter, to make it look nice c:
+    output_string = output_string[0].upper() + output_string[1:] 
 
     return output_string
 
