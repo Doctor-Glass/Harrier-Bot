@@ -5,8 +5,9 @@ from discord.ext import commands
 # Network includes
 from dotenv import load_dotenv
 # Command includes
-import roulette      # roulette.py, implements the !roulette command
-import gettime       # gettime.py, implements the !time command
+import roulette         # roulette.py, implements the !roulette command
+import gettime          # gettime.py, implements the !time command
+import pricecheck       # pricecheck.py, implements the !pricecheck command
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -66,5 +67,25 @@ async def cmd_time_error(ctx, error):
     response = gettime.convert_time(["ET"])
     await ctx.send(response)
 
+# !pricecheck command, provides price checking functionality using the Janice API
+@bot.command(name="pricecheck")
+async def cmd_pricecheck(ctx, *args):
+    arguments = ", ".join(args)
+    response = pricecheck.check(arguments)
+
+    await ctx.send(response)
+
+@cmd_pricecheck.error
+async def cmd_pricecheck_error(ctx, error):
+    response = """
+    **Usage:**
+    **\!pricecheck [market (optional)] [item] [qty (optional)] ...**
+
+    **[market (optional)]:** market to check, default is "Jita". Options are "Jita",
+    **[item]:** item(s) to check, multiple can be specified with or without quantities. Items with multiple words must be wrapped in quote marks
+    **[qty (optional)]:** optional quantity for the preceding item
+    """
+
+    await ctx.send(response)
 
 bot.run(TOKEN)
