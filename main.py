@@ -55,8 +55,6 @@ async def cmd_roulette(ctx):
 # !time command, provides options for getting the time and for converting it to different timezones
 @bot.command(name="time")
 async def cmd_time(ctx, *args):
-    print(args)
-
     arguments = ", ".join(args)
     response = gettime.convert_time(args)
 
