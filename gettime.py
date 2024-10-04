@@ -47,7 +47,7 @@ def convert_time(args):
 
         # Check if the first value is a timezone value
         if args[0] in timezones:
-            dest_timezone_offsets = []
+            dest_tz_offsets = []
 
             # Check if the second value is a valid time value
             if re.search("\d+:+\d", args[1]):
@@ -59,21 +59,36 @@ def convert_time(args):
                 else:
                     return "Invalid timezone!"
                 
-                source_time = datetime.strptime(args[1])
+                source_time = datetime.strptime(args[1], "%H:%M")
 
+                for tz in args[2:]:
+                    if tz in timezones:
+                        dest_tz_offsets.append(timezones[tz])
+                    else:
+                        return "Invalid timezone!"
+                
+                output = ""
 
+                for time in dest_tz_offsets:
+                    time_current = source_time + timedelta(hours = (time - source_time_offset))
+
+                    out_string = time_current.strftime(f"%H:%M") + " "
+
+                    output += out_string
+                
+                return output
 
             # If not, just get the current time in all listed timezones
             else:
                 for tz in args[0:]:
                     if tz in timezones:
-                        dest_timezone_offsets.append(timezones[tz])
+                        dest_tz_offsets.append(timezones[tz])
                     else:
                         return "Invalid timezone!"
                     
                 output = ""
 
-                for time in dest_timezone_offsets:
+                for time in dest_tz_offsets:
                     time_current = datetime.now(timezone.utc) + timedelta(hours = time + 1)
 
                     out_string = time_current.strftime(f"%d %b %H:%M")
