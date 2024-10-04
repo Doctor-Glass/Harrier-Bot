@@ -1,10 +1,12 @@
 # Basic includes
 import os
 import discord
+from discord.ext import commands
 # Network includes
 from dotenv import load_dotenv
 # Command includes
 import roulette      # roulette.py, implements the !roulette command
+import gettime       # gettime.py, implements the !time command
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -18,44 +20,41 @@ bot_intents.message_content = True
 bot_intents.dm_messages = True
 bot_intents.dm_typing = True
 
-client = discord.Client(intents = bot_intents)
+bot = commands.Bot(command_prefix="!", intents=bot_intents)
 
 # on_ready() is called when the bot is set up and ready to go
-@client.event
+@bot.event
 async def on_ready():
-    print(f'{client.user} has connected to Discord!')
+    print(f'Harrier Bot has connected to Discord!')
 
 # on_member_join is called when a member joins the server
-@client.event
+@bot.event
 async def on_member_join(member):
-    if member == client.user:
+    if member == bot.user:
         return
     
     await member.create_dm()
     await member.dm_channel.send(
         f"Greetings, {member.name} and welcome to Harrier Dynamics, the Caldari State's number one defense contractor! To get set up and authed in our Discord server, go to [seat.h-dyn.net](https://seat.h-dyn.net) and log in with your character, then click Discord on the left and \"Join Server\". We hope you enjoy your stay here."
     )
+        
+@bot.command(name="test")
+async def test(ctx):
+    response = "**We remain Caldari, *no matter the cost!***"
 
-# on_message() is called whenever a message is sent in a chanmnel that the bot has access to
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
+    await ctx.send(response)
 
-    match message.content:
-        # !test
-        case "!test":
-            response = "**We remain Caldari, *no matter the cost***"
+@bot.command(name="roulette")
+async def fit_roulette(ctx):
+    response = roulette.spin()
 
-            await message.channel.send(response)
-        # !roulette
-        case "!roulette":
-            response = roulette.spin()
+    await ctx.send(response)
 
-            await message.channel.send(response)
-        # default
-        case _:
-            return
+@bot.command(name="time")
+async def time(ctx, arg):
+    response = gettime.time(arg)
+
+    await ctx.send(response)
 
 
-client.run(TOKEN)
+bot.run(TOKEN)
