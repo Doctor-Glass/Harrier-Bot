@@ -43,5 +43,3 @@ def spin():
     output_string = output_string[0].upper() + output_string[1:] 
 
     return output_string
-
-print(spin())
