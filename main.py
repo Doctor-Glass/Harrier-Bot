@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import roulette         # roulette.py, implements the !roulette command
 import gettime          # gettime.py, implements the !time command
 import pricecheck       # pricecheck.py, implements the !pricecheck command
+import killfeed         # killfeed.py, implements the !killfeed command and its options
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -86,6 +87,24 @@ async def cmd_pricecheck_error(ctx, error):
     **[qty (optional)]:** optional quantity for the preceding item
     """
 
+    await ctx.send(response)
+
+@bot.command(name="killfeed")
+async def cmd_killfeed(ctx, *args):
+    arguments = ", ".join(args)
+
+    response = ""
+    
+    match arguments[0]:
+        case "create":
+            response = killfeed.create(arguments)
+        case "edit":
+            response = killfeed.edit(arguments)
+        case "remove":
+            response = killfeed.remove(arguments)
+        case _:
+            response = killfeed.create(arguments)
+    
     await ctx.send(response)
 
 bot.run(TOKEN)
