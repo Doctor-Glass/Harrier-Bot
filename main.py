@@ -72,18 +72,19 @@ async def cmd_time_error(ctx, error):
 @bot.command(name="pricecheck")
 async def cmd_pricecheck(ctx, *args):
     arguments = ", ".join(args)
-    response = pricecheck.check(arguments)
+    response = pricecheck.check(args)
 
     await ctx.send(response)
 
 @cmd_pricecheck.error
 async def cmd_pricecheck_error(ctx, error):
+    print(error)
     response = """
     **Usage:**
     **\!pricecheck [market (optional)] [item] [qty (optional)] ...**
 
-    **[market (optional)]:** market to check, default is "Jita". Options are "Jita",
-    **[item]:** item(s) to check, multiple can be specified with or without quantities. Items with multiple words must be wrapped in quote marks
+    **[market (optional)]:** market to check, default is "Jita". Options are "Jita", "Amarr", "Dodixie", "Rens", "Hek", "MJ-SF9", "R10-GN", or "NPC"
+    **[item]:** item(s) to check, multiple can be specified with or without quantities. Items with multiple words must be wrapped in quote marks.
     **[qty (optional)]:** optional quantity for the preceding item
     """
 
